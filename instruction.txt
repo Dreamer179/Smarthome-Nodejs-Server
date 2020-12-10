@@ -1,0 +1,7 @@
+https://viblo.asia/p/nodejs-mongodb-authentication-va-authorization-su-dung-jwt-1Je5EQ8G5nL?fbclid=IwAR3s5KAvBn-
+
+mognodb:
+"C:\Program Files\MongoDB\Server\4.4\bin\mongod.exe" --dbpath="c:\data\db"
+
+runserver:
+node server.js
