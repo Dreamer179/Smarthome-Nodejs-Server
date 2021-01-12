@@ -3,7 +3,8 @@ const Home = mongoose.model(
   "Home",
   new mongoose.Schema({
     username: String,
-    homeid: String,
+    homename: String,
+    homeimage: Number,
     address: String,
   })
 );

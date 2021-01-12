@@ -85,4 +85,6 @@ app.listen(PORT, '0.0.0.0',() => {
 // routes
 require('./app/routes/auth.routes')(app);
 // require('./app/routes/user.routes')(app);
+require('./app/routes/home.routes')(app);
 // set port, listen for requests
+require('./app/routes/room.routes')(app);

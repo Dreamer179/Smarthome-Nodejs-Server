@@ -1,8 +1,10 @@
 const authJwt = require("./authJwt");
 const verifySignUp = require("./verifySignUp");
-const addNewHome = require("./addNewHome");
+const controlHome = require("./controlHome");
+const controlRoom = require("./controlRoom");
 module.exports = {
   authJwt,
   verifySignUp,
-  addNewHome
+  controlHome,
+  controlRoom,
 };
