@@ -10,70 +10,94 @@ const { home } = require("../models");
 const { room } = require("../models");
 const { device } = require("../models");
 
+var mqtt = require('mqtt')
+var settings = {
+    mqttServerUrl : "localhost",
+    port : 18833
+    }
+var client  = mqtt.connect('mqtt://' + settings.mqttServerUrl + ":" + settings.port);
+
 exports.addnewdevice = (req, res) => {
-    const room = new Room({
-      username: req.body.username,
-      homename: req.body.homename,
-      roomname: req.body.roomname,
-      roomip:   req.body.roomip,
+    const device = new Device({
+      homeid: req.body.homeid,
+      roomid: req.body.roomid,
+      devicename: req.body.devicename,
+      devicetype:   req.body.devicetype,
+      deviceorder:     req.body.deviceid,
       status:   req.body.status
     });
     let ts = Date.now();
     let date_ob = new Date(ts);
-    console.log(date_ob + ": addnewroom");
-    room.save((err, room) => {
+    console.log(date_ob + ": addnewdevice");
+    //
+    Room.findOne({
+      _id: req.body.roomid
+      }).exec((err, room) => {
       if (err) {
         res.status(500).send({ message: err });
         return;
       }
-      room.save(err => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
-        res.status(200).send({
-          room: room
-        });
-      });
-    });
-  };
-
-
-exports.deleteroom = (req, res) => {
-    Room.findOne({
-      _id: req.body.roomid,
-      username: req.body.username,
-      homename: req.body.homename,
-      roomname: req.body.roomname
-    })
-        .populate("roles", "-__v")
-        .exec((err, room) => {
+      if (room) {
+        device.save((err, device) => {
           if (err) {
             res.status(500).send({ message: err });
             return;
           }
-          if (!room) {
-            return res.status(404).send({ message: "Failed ! Room Not found." });
+          device.save(err => {
+            if (err) {
+              res.status(500).send({ message: err });
+              return;
+            }
+            /////////////public mqtt///////////////
+            topic = room.macaddess
+            client.on('connect', function () {
+              var message = "Hello mqtt";
+              client.publish(settings.topic, message);
+              console.log('Sent ' + message + " to " + settings.topic);
+              });
+            ////////////////////////////////
+            res.status(200).send({
+              device: device
+            });
+          });
+        });
+      }
+      res.status(404).send({ message: "Failed! room is invalid" });
+      return;
+    });
+    //
+  };
+
+
+exports.deletedevice = (req, res) => {
+    Device.findOne({
+      _id: req.body._id
+    })
+        .populate("roles", "-__v")
+        .exec((err, device) => {
+          if (err) {
+            res.status(500).send({ message: err });
+            return;
+          }
+          if (!device) {
+            return res.status(404).send({ message: "Failed ! Device Not found." });
           }
           let ts = Date.now();
           let date_ob = new Date(ts);
-          console.log(date_ob + ": deleteroom");
-          console.log(room);
-          let roomdelete = room;
-          if (room){
-            Room.deleteOne({
-              _id: req.body.roomid,
-              username: req.body.username,
-              homename: req.body.homename,
-              roomname: req.body.roomname
-              }).exec((err, room) => {
+          console.log(date_ob + ": deletedevice");
+          console.log(device);
+          let devicedelete = device;
+          if (device){
+            Device.deleteOne({
+              device
+              }).exec((err, device) => {
               if (err) {
                 res.status(500).send({ message: err });
                 return;
               }
-              if (room) {
+              if (device) {
                 return res.status(200).send({
-                  room: roomdelete
+                  device: devicedelete
                   });
               }
             });
@@ -83,23 +107,22 @@ exports.deleteroom = (req, res) => {
   };
 
 
-exports.listRoomName = (req, res) => {
-  Room.find({
-    username: req.body.username,
-    homename: req.body.homename
-  }).exec((err, room) => {
+exports.listDeviceName = (req, res) => {
+  Device.find({
+    roomid: req.body.roomid,
+  }).exec((err, device) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
     }
-    if (room) {
-      console.log(home)
+    if (device) {
+      console.log(device)
       res.status(200).send({
-        room: room
+        device: device
       })
       return;
     }
-    res.status(404).send({ message: "Failed! room is invalid" });
+    res.status(404).send({ message: "Failed! device is invalid" });
     return;
   });
 };

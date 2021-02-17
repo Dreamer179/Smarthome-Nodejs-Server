@@ -2,13 +2,12 @@ const mongoose = require("mongoose");
 const Device = mongoose.model(
   "Device",
   new mongoose.Schema({
-    username: String,
-    homename: String,
-    roomname: String,
-    roomip: String,
+    userid: String,
+    homeid: String,
+    roomid: String,
     devicename: String,
-    devicetype: String,
     deviceip: String,
+    devicetype: String,
     status: String,
   })
 );

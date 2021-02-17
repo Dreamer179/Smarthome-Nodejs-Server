@@ -7,21 +7,21 @@ var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const { home } = require("../models");
 const { room } = require("../models");
-
+const { authJwt }   = require("../middlewares");
 
 exports.addnewroom = (req, res) => {
     const room = new Room({
-      username: req.body.username,
-      homename: req.body.homename,
+      userid: req.body.userid,
+      homeid: req.body.homeid,
       roomname: req.body.roomname,
+      roomip: req.body.macaddress,
       roomimage: req.body.roomimage,
-      roomip:   req.body.roomip,
       status:   req.body.status
     });
     let ts = Date.now();
     let date_ob = new Date(ts);
     console.log(date_ob + ": addnewroom");
-    room.save((err, room) => {
+    room.save((err, room) => { 
       if (err) {
         res.status(500).send({ message: err });
         return;
@@ -41,7 +41,7 @@ exports.addnewroom = (req, res) => {
 
 exports.deleteroom = (req, res) => {
     Room.findOne({
-      _id: req.body.roomid,
+      _id: req.body._id,
       username: req.body.username,
       homename: req.body.homename,
       roomname: req.body.roomname
@@ -62,7 +62,7 @@ exports.deleteroom = (req, res) => {
           let roomdelete = room;
           if (room){
             Room.deleteOne({
-              _id: req.body.roomid,
+              _id: req.body._id,
               username: req.body.username,
               homename: req.body.homename,
               roomname: req.body.roomname
@@ -85,15 +85,15 @@ exports.deleteroom = (req, res) => {
 
 exports.listRoomName = (req, res) => {
   Room.find({
-    username: req.body.username,
-    homename: req.body.homename
+    userid: req.body.userid,
+    homeid: req.body.homeid
   }).exec((err, room) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
     }
     if (room) {
-      console.log(home)
+      console.log(room)
       res.status(200).send({
         room: room
       })

@@ -23,9 +23,8 @@ module.exports = function(app) {
     "/api/delete/home",
     [
       authJwt.verifyToken,
-      controlHome.findHomeName
+      controller.deletehome
     ],
-    controller.deletehome
     );
 
   app.get(

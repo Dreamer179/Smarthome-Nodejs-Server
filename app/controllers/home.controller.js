@@ -5,18 +5,18 @@ const Role = db.role;
 const Home = db.home;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
-const { home } = require("../models");
-
-// let date_ob = new Date();
+const { home } = require("../models")
 
 exports.addnewhome = (req, res) => {
     const home = new Home({
-      username: req.body.username,
+      userid: req.body.userid,
       homename: req.body.homename,
       homeip:   req.body.homeip,
-      macaddress: req.body.macaddress,
+      ssid:     req.body.ssid,
+      wifipassword: req.body.wifipassword,
       homeimage: req.body.homeimage,
-      address: req.body.address
+      address: req.body.address,
+      status: req.body.status,
     });
     let ts = Date.now();
     let date_ob = new Date(ts);
@@ -41,9 +41,7 @@ exports.addnewhome = (req, res) => {
 
 exports.deletehome = (req, res) => {
     Home.findOne({
-      _id: req.body._id,
-      username: req.body.username,
-      homename: req.body.homename,
+      _id: req.body.homeid
     })
         .populate("roles", "-__v")
         .exec((err, home) => {
@@ -61,7 +59,7 @@ exports.deletehome = (req, res) => {
           let homedelete = home;
           if (home){
             Home.deleteOne({
-              _id: req.body._id
+              _id: req.body.homeid
               }).exec((err, home) => {
               if (err) {
                 res.status(500).send({ message: err });
@@ -78,10 +76,9 @@ exports.deletehome = (req, res) => {
           });
   };
 
-
 exports.listHomeName = (req, res) => {
   User.find({
-    username: req.body.username
+    _id: req.body.userid
   }).exec((err, user) => {
     if (err) {
       res.status(500).send({ message: err });
@@ -89,23 +86,22 @@ exports.listHomeName = (req, res) => {
     }
     if (user) {
       Home.find({
-        username: req.body.username
+        userid: req.body.userid
         }).exec((err, home) => {
         if (err) {
           res.status(500).send({ message: err });
           return;
         }
         if (home) {
-          console.log(home)
+          console.log("list home")
           res.status(200).send({
-            home: home
+            home: home 
           })
           return;
         }
       });
       return;
     }
-    // Tim khong thay username
     res.status(404).send({ message: "Failed! user is invalid" });
     return;
   });

@@ -21,6 +21,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.10.18"
+    "mongoose": "^5.10.18",
+    "mosca": "^2.8.3",
+    "mqtt": "^4.2.6"
   }
 }

@@ -2,9 +2,29 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
+
 var corsOptions = {
   origin: "http://0.0.0.0:8081"
 };
+
+const mosca = require('mosca');
+var settings = {
+  port : 18833
+}
+var server = new mosca.Server(settings);
+// fired client is connected
+server.on('clientConnected', function(client) {
+console.log('Client connected', client.id);
+});
+// fired when a message is received
+server.on('published', function(packet, client) {
+console.log('Message Received ', packet.payload);
+});
+server.on('ready', setup);
+// fired when the mqtt server is ready
+function setup() {
+console.log('Mosca MQTT server is up and running at ' + settings.port);
+}
 
 
 const db = require("./app/models");
@@ -57,6 +77,7 @@ function initial() {
   });
 }
 
+
 app.use(cors(corsOptions));
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
@@ -88,3 +109,4 @@ require('./app/routes/auth.routes')(app);
 require('./app/routes/home.routes')(app);
 // set port, listen for requests
 require('./app/routes/room.routes')(app);
+require('./app/routes/device.routes')(app);

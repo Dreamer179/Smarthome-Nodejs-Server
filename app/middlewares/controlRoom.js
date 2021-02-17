@@ -1,12 +1,12 @@
+const { home } = require("../models");
 const db = require("../models");
 const Home = db.home;
 const User = db.user;
 const Room = db.room;
 
 checkDuplicateRoomName = (req, res, next) => {
-  // Username
   User.findOne({
-    username: req.body.username
+    _id: req.body.userid
   }).exec((err, user) => {
     if (err) {
       res.status(500).send({ message: err });
@@ -14,7 +14,7 @@ checkDuplicateRoomName = (req, res, next) => {
     }
     if (user) {
       Home.findOne({
-        homename: req.body.homename
+        _id: req.body.homeid
         }).exec((err, home) => {
         if (err) {
           res.status(500).send({ message: err });
@@ -22,22 +22,21 @@ checkDuplicateRoomName = (req, res, next) => {
         }
         if (home) {
             Room.findOne({
-                homename: req.body.homename,
-                roomname: req.body.roomname
+                roomip: req.body.roomip
                 }).exec((err, room) => {
                 if (err) {
                   res.status(500).send({ message: err });
                   return;
                 }
                 if (room) {
-                  res.status(400).send({ message: "Failed! roomname is valid" });
+                  res.status(400).send({ message: "Failed! roomip is valid" });
                   return;
                 }
                 next();
               });
           return;
         }
-        res.status(404).send({ message: "Failed! homename is invalid" });
+        res.status(404).send({ message: "Failed! home is invalid" });
         return;
         // next();
       });
@@ -67,7 +66,6 @@ findRoomName = (req, res, next) => {
           return;
         }
         if (home) {
-          
           next();
           return;
         }

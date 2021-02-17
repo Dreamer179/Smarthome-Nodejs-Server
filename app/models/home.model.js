@@ -2,10 +2,14 @@ const mongoose = require("mongoose");
 const Home = mongoose.model(
   "Home",
   new mongoose.Schema({
-    username: String,
+    userid: String,
     homename: String,
+    homeip:   String,
+    ssid: String,
+    wifipassword: String,
     homeimage: Number,
     address: String,
+    status: Boolean,
   })
 );
 module.exports = Home;
