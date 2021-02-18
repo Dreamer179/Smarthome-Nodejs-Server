@@ -14,8 +14,8 @@ exports.addnewroom = (req, res) => {
       userid: req.body.userid,
       homeid: req.body.homeid,
       roomname: req.body.roomname,
-      roomip: req.body.macaddress,
       roomimage: req.body.roomimage,
+      roomip: req.body.roomip,
       status:   req.body.status
     });
     let ts = Date.now();
@@ -41,10 +41,9 @@ exports.addnewroom = (req, res) => {
 
 exports.deleteroom = (req, res) => {
     Room.findOne({
-      _id: req.body._id,
-      username: req.body.username,
-      homename: req.body.homename,
-      roomname: req.body.roomname
+      _id: req.body.roomid,
+      homeid: req.body.homeid,
+      userid: req.body.userid
     })
         .populate("roles", "-__v")
         .exec((err, room) => {
@@ -58,14 +57,11 @@ exports.deleteroom = (req, res) => {
           let ts = Date.now();
           let date_ob = new Date(ts);
           console.log(date_ob + ": deleteroom");
-          console.log(room);
+          // console.log(room);
           let roomdelete = room;
           if (room){
             Room.deleteOne({
-              _id: req.body._id,
-              username: req.body.username,
-              homename: req.body.homename,
-              roomname: req.body.roomname
+              _id: req.body.roomid,
               }).exec((err, room) => {
               if (err) {
                 res.status(500).send({ message: err });

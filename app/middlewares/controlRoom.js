@@ -42,16 +42,14 @@ checkDuplicateRoomName = (req, res, next) => {
       });
       return;
     }
-    // Tim khong thay username
     res.status(404).send({ message: "Failed! user is invalid" });
     return;
   });
 };
 
 findRoomName = (req, res, next) => {
-  // Username
   User.findOne({
-    username: req.body.username
+    _id: req.body.userid
   }).exec((err, user) => {
     if (err) {
       res.status(500).send({ message: err });
@@ -59,21 +57,34 @@ findRoomName = (req, res, next) => {
     }
     if (user) {
       Home.findOne({
-        homename: req.body.homename
+        _id: req.body.homeid
         }).exec((err, home) => {
         if (err) {
           res.status(500).send({ message: err });
           return;
         }
         if (home) {
-          next();
+          Room.findOne({
+            _id: req.body.roomid
+            }).exec((err, room) => {
+            if (err) {
+              res.status(500).send({ message: err });
+              return;
+            }
+            if (room) {
+              next();
+              return;
+            }
+            res.status(404).send({ message: "Failed! room is invalid" });
+            next();
+          });
           return;
         }
+        res.status(404).send({ message: "Failed! home is invalid" });
         next();
       });
       return;
     }
-    // Tim khong thay username
     res.status(404).send({ message: "Failed! user is invalid" });
     return;
   });
