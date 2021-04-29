@@ -14,7 +14,8 @@ module.exports = function(app) {
     "/api/add/newroom",
     [
       authJwt.verifyToken,
-      controlRoom.checkDuplicateRoomName
+      controlRoom.checkDuplicateRoomName,
+      controlRoom.checkDuplicateRoomIp
     ],
     controller.addnewroom
     );
@@ -22,10 +23,9 @@ module.exports = function(app) {
   app.delete(
     "/api/delete/room",
     [
-      authJwt.verifyToken,
-      controlRoom.findRoomName
-    ],
+    authJwt.verifyToken,
     controller.deleteroom
+    ],
     );
 
   app.get(
@@ -35,4 +35,21 @@ module.exports = function(app) {
       controller.listRoomName
     ],
     );
+
+  app.post(
+    "/api/control/room",
+    [
+      authJwt.verifyToken,
+      controller.controlRoom
+    ], 
+    );
+
+  app.put(
+    "/api/edit/room",
+    [
+      authJwt.verifyToken,
+      controller.editRoom
+    ],
+    );
+
 };

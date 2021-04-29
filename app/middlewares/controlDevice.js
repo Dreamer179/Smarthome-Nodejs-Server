@@ -22,14 +22,16 @@ checkDuplicateDevice = (req, res, next) => {
         }
         if (room) {
             Device.findOne({
-                devicename: req.body.devicename
+                deviceip: req.body.deviceip
                 }).exec((err, device) => {
                 if (err) {
                   res.status(500).send({ message: err });
                   return;
                 }
                 if (device) {
-                  res.status(400).send({ message: "Failed! devicename is valid" });
+                  console.log(": device is valid: ");
+                  console.log(device);
+                  res.status(400).send({ message: "Failed! device is valid" });
                   return;
                 }
                 next();

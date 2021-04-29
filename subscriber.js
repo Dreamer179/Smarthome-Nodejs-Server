@@ -2,7 +2,7 @@ var mqtt = require('mqtt')
 var settings = {
     mqttServerUrl : "localhost",
     port : 18833,
-    topic : "myTopic"
+    topic : "12:E2:20:00:4F"
     }
 var client  = mqtt.connect('mqtt://' + settings.mqttServerUrl + ":" + settings.port);
 

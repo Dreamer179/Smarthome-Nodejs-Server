@@ -19,6 +19,14 @@ module.exports = function(app) {
     controller.addnewdevice
     );
 
+  app.post(
+      "/api/control/device",
+      [
+        authJwt.verifyToken,
+        controller.controlDevice
+      ], 
+      );
+
   app.delete(
     "/api/delete/device",
     [
@@ -29,10 +37,18 @@ module.exports = function(app) {
     );
 
   app.get(
-    "/api/list/room",
+    "/api/list/device",
     [
       authJwt.verifyToken,
       controller.listDeviceName
+    ],
+    );
+  
+  app.put(
+    "/api/edit/device",
+    [
+      authJwt.verifyToken,
+      controller.editDevice
     ],
     );
 };

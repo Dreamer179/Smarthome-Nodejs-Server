@@ -14,6 +14,40 @@ checkDuplicateHomeName = (req, res, next) => {
     if (user) {
       Home.findOne({
         userid: user.id,
+        homename: req.body.homename
+        }).exec((err, home) => {
+        if (err) {
+          res.status(500).send({ message: err });
+          return;
+        }
+        if (home) {
+          res.status(400).send({
+            message: "Failed!",
+            status: "homename is valid"
+            });
+          return;
+        }
+        next();
+      });
+      return;
+    }
+    res.status(404).send({ message: "Failed! user is invalid" });
+    return;
+  });
+};
+
+checkDuplicateHomeIp = (req, res, next) => {
+  User.findOne({
+    _id: req.body.userid
+  }).exec((err, user) => {
+    console.log(req.body.userid)
+    if (err) {
+      res.status(500).send({ message: err });
+      return;
+    }
+    if (user) {
+      Home.findOne({
+        userid: user.id,
         homeip: req.body.homeip
         }).exec((err, home) => {
         if (err) {
@@ -21,8 +55,62 @@ checkDuplicateHomeName = (req, res, next) => {
           return;
         }
         if (home) {
-          res.status(400).send({ message: "Failed! home is valid" });
+          res.status(400).send({
+            message: "Failed!",
+            status: "homeip is valid"
+            });
           return;
+        }
+        next();
+      });
+      return;
+    }
+    res.status(404).send({ message: "Failed! user is invalid" });
+    return;
+  });
+};
+
+
+checkDuplicateHome = (req, res, next) => {
+  User.findOne({
+    _id: req.body.userid
+  }).exec((err, user) => {
+    console.log(req.body.userid)
+    if (err) {
+      res.status(500).send({ message: err });
+      return;
+    }
+    if (user) {
+      Home.findOne({
+        homeip: req.body.homeip
+        }).exec((err, home) => {
+        if (err) {
+          res.status(500).send({ message: err });
+          return;
+        }
+        if (home) {
+          res.status(400).send({
+            message: "Failed!",
+            status: "homeip is valid"});
+          return;
+        }
+        if (!home) {
+        Home.findOne({
+          userid: user.id,
+          homeip: req.body.homename
+          }).exec((err, home) => {
+          if (err) {
+            res.status(500).send({ message: err });
+            return;
+            }
+          if (home) {
+            res.status(400).send({
+              message: "Failed!",
+              status: "homename is valid"});
+            return;
+            }
+          // next();
+          });
         }
         next();
       });
@@ -65,6 +153,8 @@ findHomeName = (req, res, next) => {
 
 const controlHome = {
   checkDuplicateHomeName,
+  checkDuplicateHomeIp,
+  checkDuplicateHome,
   findHomeName
 };
 module.exports = controlHome;

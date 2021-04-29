@@ -7,7 +7,7 @@ const Home = mongoose.model(
     homeip:   String,
     ssid: String,
     wifipassword: String,
-    homeimage: Number,
+    homeimage: String,
     address: String,
     status: Boolean,
   })

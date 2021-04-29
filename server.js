@@ -77,6 +77,14 @@ function initial() {
   });
 }
 
+app.use(function (error, req, res, next) {
+  if (!error) {
+    next();
+  } else {
+    console.error(error.stack);
+    res.send(500);
+  }
+});
 
 app.use(cors(corsOptions));
 // parse requests of content-type - application/json

@@ -6,7 +6,7 @@ const Room = mongoose.model(
     homeid: String,
     roomname: String,
     roomip: String,
-    roomimage: Number,
+    roomimage: String,
     status: Boolean,
   })
 );

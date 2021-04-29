@@ -5,6 +5,7 @@ const Device = mongoose.model(
     userid: String,
     homeid: String,
     roomid: String,
+    roomip: String,
     devicename: String,
     deviceip: String,
     devicetype: String,

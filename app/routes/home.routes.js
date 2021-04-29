@@ -14,7 +14,8 @@ module.exports = function(app) {
     "/api/add/newhome",
     [
       authJwt.verifyToken,
-      controlHome.checkDuplicateHomeName
+      controlHome.checkDuplicateHomeName,
+      controlHome.checkDuplicateHomeIp
     ],
     controller.addnewhome
     );
@@ -34,4 +35,13 @@ module.exports = function(app) {
       controller.listHomeName
     ],
     );
+
+  app.put(
+    "/api/edit/home",
+    [
+      authJwt.verifyToken,
+      controller.editHome
+    ],
+    );
+
 };
