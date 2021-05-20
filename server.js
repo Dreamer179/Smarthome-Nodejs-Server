@@ -8,9 +8,21 @@ var corsOptions = {
 };
 
 const mosca = require('mosca');
+// var settings = {
+//   port : 18833
+// }
+
 var settings = {
-  port : 18833
-}
+  host: '0.0.0.0',
+  port: 18833,
+  http: {
+      port: 8002,
+      host: '0.0.0.0',
+      static: './mqtt/',
+      bundle: true,
+  },
+};
+
 var server = new mosca.Server(settings);
 // fired client is connected
 server.on('clientConnected', function(client) {

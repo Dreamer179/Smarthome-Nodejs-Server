@@ -192,7 +192,7 @@ exports.controlDevice = (req, res) => {
               }
 
             client.on('connect', function () {
-              var message = device.deviceip +":"+ req.body.status;
+              var message = device.deviceip +":"+ req.body.status+":";
               client.publish(device.roomip, message);
               console.log('Sent ' + message + " to " + device.roomip);
             });
